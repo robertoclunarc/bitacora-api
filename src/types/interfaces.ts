@@ -75,3 +75,120 @@ export interface AuthUser {
     responsable?: string | null;
   }
   
+  export interface IntegranteReunion {
+    idintegrantereunion?: number;
+    fkreunion: number;
+    nombres_apellidos_integrante: string;
+    asistio: boolean;
+  }
+  
+  export interface Cartelera {
+    idcartelera?: number;
+    fkarea: number;
+    descripcion: string;
+    login_registrado: string;
+    fecha_registrado?: Date;
+    fecha_inicio_publicacion: Date;
+    fecha_fin_publicacion: Date;
+    estatus: 'ACTIVO' | 'INACTIVO' | 'VENCIDO';
+  }
+  
+  export interface SistemaForce {
+    idsistema?: number;
+    descripcion: string;
+  }
+  
+  export interface SenalForce {
+    idsenal?: number;
+    descripcion: string;
+  }
+  
+  export interface Force {
+    idforce?: number;
+    fksenal?: number | null;
+    fksistema?: number | null;
+    causas: string;
+    valor: number;
+    solicitado_por: string;
+    autorizado_por: string;
+    ejecutor_por: string;
+    tipoforce: string;
+    estatusforce: 'ACTIVO' | 'INACTIVO' | 'COMPLETADO' | 'CANCELADO';
+    fecha_registrado?: Date;
+    login_registrado: string;
+    fecha_modificacion?: Date | null;
+    login_modificacion?: string | null;
+  }
+  
+  export interface Menu {
+    idmenu?: number;
+    idpadre?: number | null;
+    name?: string | null;
+    url?: string | null;
+    href?: string | null;
+    icon?: string | null;
+    badge_text?: string | null;
+    badge_variant?: string | null;
+    badge_class?: string | null;
+    variant?: string | null;
+    attributes?: string | null;
+    attributes_element?: string | null;
+    divider?: boolean | null;
+    class?: string | null;
+    label_class?: string | null;
+    label_variant?: string | null;
+    wrapper_attributes?: string | null;
+    wrapper_element?: string | null;
+    linkprops?: string | null;
+    title?: boolean | null;
+    estatus: boolean;
+    orden?: number | null;
+    children?: Menu[]; // Para representar submenús en estructura jerárquica
+  }
+  
+  export interface MenuUsuario {
+    idmenu: number;
+    login: string;
+    pupdate: boolean;
+    pinsert: boolean;
+    pdelete?: boolean;
+    pselect?: boolean;
+    export?: boolean;
+    estatus: 'ACTIVO' | 'INACTIVO';
+  }
+  
+  export interface Tarea {
+    idtarea?: number;
+    fecha_registrado?: Date;
+    login_registrado: string;
+    tipo_tarea: 'NORMAL' | 'URGENTE' | 'PREVENTIVA' | 'CORRECTIVA';
+    descripcion: string;
+    estatus: 'PENDIENTE' | 'EN_PROCESO' | 'FINALIZADA' | 'CANCELADA';
+    fecha_modificacion?: Date | null;
+    login_modificacion?: string | null;
+  }
+  
+  export interface DetalleTarea {
+    iddetalletarea?: number;
+    fktarea: number;
+    fkequipo?: number | null;
+    descripcion: string;
+    responsable: string;
+    estatus: 'PENDIENTE' | 'EN_PROCESO' | 'FINALIZADA' | 'CANCELADA';
+    fecha_inicio: Date;
+    fecha_fin?: Date | null;
+    fecha_registro?: Date;
+    login_registrado: string;
+    fecha_modificacion?: Date | null;
+    login_modificacion?: string | null;
+  }
+  
+  // Interfaces para tablas legacy (puedes agregarlas si las necesitas)
+  export interface OldBitacora {
+    fecha: Date;
+    hora?: string;
+    folio: number;
+    turno?: string;
+    tipo: string;
+    // ... otros campos según sea necesario
+  }

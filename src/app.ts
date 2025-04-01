@@ -8,6 +8,13 @@ import equiposRoutes from './routes/equipos.routes';
 import reunionesRoutes from './routes/reuniones.routes';
 import minutasRoutes from './routes/minutas.routes';
 import usuariosRoutes from './routes/usuarios.routes';
+import integrantesReunionRoutes from './routes/integrantes-reunion.routes';
+import cartelerasRoutes from './routes/carteleras.routes';
+import sistemasForceRoutes from './routes/sistemas-force.routes';
+import senalesForceRoutes from './routes/senales-force.routes';
+import forceRoutes from './routes/force.routes';
+import menusRoutes from './routes/menus.routes';
+import menusUsuariosRoutes from './routes/menus-usuarios.routes';
 import oldBitacorasRoutes from './routes/old-bitacoras.routes';
 import { testConnection } from './config/database';
 import config from './config/config';
@@ -35,6 +42,14 @@ app.use('/api-bitacora/usuarios', usuariosRoutes);
 app.use('/api-bitacora/bitacoras', bitacorasRoutes);
 app.use('/api-bitacora/equipos', equiposRoutes);
 app.use('/api-bitacora/reuniones', reunionesRoutes);
+app.use('/api/integrantes-reunion', integrantesReunionRoutes);
+app.use('/api/carteleras', cartelerasRoutes);
+app.use('/api/sistemas-force', sistemasForceRoutes);
+app.use('/api/force', forceRoutes);
+app.use('/api/menus', menusRoutes);
+app.use('/api/menus-usuarios', menusUsuariosRoutes);
+app.use('/api/senales-force', senalesForceRoutes);
+
 app.use('/api-bitacora/minutas', minutasRoutes);
 
 // Ruta de verificación básica
