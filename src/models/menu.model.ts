@@ -26,7 +26,7 @@ export const findById = async (id: number): Promise<Menu | null> => {
   }
 };
 
-export const findByParent = async (parentId: number | null): Promise<Menu[]> => {
+export const findByParent = async (parentId: number | null, login: string): Promise<Menu[]> => {
   try {
     let query = 'SELECT * FROM menus WHERE idpadre ';
     
@@ -35,8 +35,8 @@ export const findByParent = async (parentId: number | null): Promise<Menu[]> => 
       const [rows] = await pool.query(query);
       return rows as Menu[];
     } else {
-      query += '= ?';
-      const [rows] = await pool.query(query, [parentId]);
+      query += '= ? AND estatus = 1 and idmenu IN (SELECT idmenu FROM menus_usuarios WHERE estatus = "ACTIVO" AND login = ?) ORDER BY orden';
+      const [rows] = await pool.query(query, [parentId, login]);
       return rows as Menu[];
     }
   } catch (error) {
@@ -256,14 +256,14 @@ export const getMenusByUser = async (login: string): Promise<Menu[]> => {
   }
 };
 
-export const getMenuTree = async (): Promise<Menu[]> => {
+export const getMenuTree = async (login: string): Promise<Menu[]> => {
   try {
     // Obtener menús raíz (sin padre)
-    const rootMenus = await findByParent(null);
+    const rootMenus = await findByParent(0, login);
     
     // Función para agregar hijos a cada menú
     const addChildren = async (menu: Menu): Promise<Menu> => {
-      const children = await findByParent(menu.idmenu!);
+      const children = await findByParent(menu.idmenu!, login);
       
       if (children.length > 0) {
         // Agregar recursivamente hijos a cada hijo

@@ -10,7 +10,7 @@ const JWT_EXPIRES_IN = (config.jwt.expiresIn) as SignOptions["expiresIn"];
 export const loginUser = async (login: string, password: string): Promise<{ token: string, user: AuthUser } | null> => {
   try {
     const [rows]: any = await pool.execute(
-      'SELECT login, trabajador, estatus, nivel, nombres, fkarea, email FROM usuarios WHERE login = ?',
+      'SELECT login, trabajador, estatus, nivel, nombres, fkarea, email, password FROM usuarios WHERE login = ?',
       [login]
     );
 
@@ -21,8 +21,8 @@ export const loginUser = async (login: string, password: string): Promise<{ toke
     const user = rows[0] as Usuario;
     
     // En un caso real, aquí verificarías la contraseña hasheada
-    // Por ahora, simularemos esto (en la implementación real, obtendrías el hash de la BD)
-    const passwordMatch = await bcrypt.compare(password, '$2a$10$randomhashhere'); // Esto es simulado
+    
+    const passwordMatch = user.password ? await bcrypt.compare(password, user.password) : false;
     
     if (!passwordMatch) {
       return null;

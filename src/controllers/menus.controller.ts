@@ -32,10 +32,10 @@ export const getMenuById = async (req: Request, res: Response): Promise<void> =>
 
 export const getMenusByParent = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { parentId } = req.params;
+    const { parentId, user } = req.params;
     const parentIdNumber = parentId === 'null' ? null : Number(parentId);
     
-    const menus = await menuModel.findByParent(parentIdNumber);
+    const menus = await menuModel.findByParent(parentIdNumber, user);
     res.status(200).json({ menus });
   } catch (error) {
     console.error(`Error al obtener menús por padre ${req.params.parentId}:`, error);
@@ -248,7 +248,8 @@ export const getMenusByUser = async (req: Request, res: Response): Promise<void>
 
 export const getMenuTree = async (_req: Request, res: Response): Promise<void> => {
   try {
-    const menuTree = await menuModel.getMenuTree();
+    const user = _req.params.user;
+    const menuTree = await menuModel.getMenuTree(user);
     res.status(200).json({ menuTree });
   } catch (error) {
     console.error('Error al obtener árbol de menús:', error);

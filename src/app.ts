@@ -42,13 +42,13 @@ app.use('/api-bitacora/usuarios', usuariosRoutes);
 app.use('/api-bitacora/bitacoras', bitacorasRoutes);
 app.use('/api-bitacora/equipos', equiposRoutes);
 app.use('/api-bitacora/reuniones', reunionesRoutes);
-app.use('/api/integrantes-reunion', integrantesReunionRoutes);
-app.use('/api/carteleras', cartelerasRoutes);
-app.use('/api/sistemas-force', sistemasForceRoutes);
-app.use('/api/force', forceRoutes);
-app.use('/api/menus', menusRoutes);
-app.use('/api/menus-usuarios', menusUsuariosRoutes);
-app.use('/api/senales-force', senalesForceRoutes);
+app.use('/api-bitacora/integrantes-reunion', integrantesReunionRoutes);
+app.use('/api-bitacora/carteleras', cartelerasRoutes);
+app.use('/api-bitacora/sistemas-force', sistemasForceRoutes);
+app.use('/api-bitacora/force', forceRoutes);
+app.use('/api-bitacora/menus', menusRoutes);
+app.use('/api-bitacora/menus-usuarios', menusUsuariosRoutes);
+app.use('/api-bitacora/senales-force', senalesForceRoutes);
 
 app.use('/api-bitacora/minutas', minutasRoutes);
 

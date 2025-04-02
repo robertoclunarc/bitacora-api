@@ -48,7 +48,7 @@ export const createUsuario = async (req: Request, res: Response): Promise<void> 
     }
     
     // Verificar si ya existe un usuario con el mismo nombre (clave primaria)
-    const existingUserByName = await usuarioModel.findByNombres(nombres);
+    const existingUserByName = await usuarioModel.findByTrabajador(trabajador);
     
     if (existingUserByName) {
       res.status(400).json({ message: 'Ya existe un usuario con ese nombre' });
@@ -102,7 +102,7 @@ export const updateUsuario = async (req: Request, res: Response): Promise<void> 
     
     // Si cambiamos el nombre, verificar que no exista otro usuario con ese nombre
     if (nombres !== usuario.nombres) {
-      const existingUserByName = await usuarioModel.findByNombres(nombres);
+      const existingUserByName = await usuarioModel.findByTrabajador(trabajador);
       
       if (existingUserByName && existingUserByName.login !== login) {
         res.status(400).json({ message: 'Ya existe un usuario con ese nombre' });

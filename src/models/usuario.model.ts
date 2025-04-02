@@ -32,11 +32,11 @@ export const findById = async (login: string): Promise<Usuario | null> => {
   }
 };
 
-export const findByNombres = async (nombres: string): Promise<Usuario | null> => {
+export const findByTrabajador = async (cedula: string): Promise<Usuario | null> => {
   try {
     const [rows]: any = await pool.query(
-      'SELECT login, trabajador, estatus, nivel, fecha_ultima_sesion, nombres, fkarea, email FROM usuarios WHERE nombres = ?',
-      [nombres]
+      'SELECT login, trabajador, estatus, nivel, fecha_ultima_sesion, nombres, fkarea, email FROM usuarios WHERE trabajador = ?',
+      [cedula]
     );
     
     if (rows.length === 0) {
@@ -45,7 +45,7 @@ export const findByNombres = async (nombres: string): Promise<Usuario | null> =>
     
     return rows[0] as Usuario;
   } catch (error) {
-    console.error(`Error en findByNombres usuario ${nombres}:`, error);
+    console.error(`Error en findByTrabajador trabajador ${cedula}:`, error);
     throw error;
   }
 };
