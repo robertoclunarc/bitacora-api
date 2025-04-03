@@ -1,5 +1,5 @@
 ALTER TABLE `usuarios` ADD `password` VARCHAR(500) NOT NULL AFTER `email`;
-
+INSERT INTO `areas` (`idarea`, `nombrearea`, `estatusarea`, `responsable`) VALUES (NULL, 'Tecnologia', 'ACTIVO', 'Roberto Lunar');
 { 
 	"login":"matlux", 
  "trabajador":"16395343", 
