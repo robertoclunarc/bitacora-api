@@ -13,7 +13,7 @@ import { authenticateJWT, checkRole } from '../middlewares/authMiddleware';
 const router = Router();
 
 // Rutas protegidas con autenticación
-router.get('/', authenticateJWT, getAllReuniones);
+router.get('/', /*authenticateJWT,*/ getAllReuniones);
 router.get('/search', authenticateJWT, searchReuniones);
 router.get('/:id', authenticateJWT, getReunionById);
 router.get('/area/:areaId', authenticateJWT, getReunionesbyArea);

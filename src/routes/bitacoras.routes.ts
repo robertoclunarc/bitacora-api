@@ -12,7 +12,7 @@ import { authenticateJWT, checkRole } from '../middlewares/authMiddleware';
 const router = Router();
 
 // Rutas protegidas con autenticación
-router.get('/', authenticateJWT, getAllBitacoras);
+router.get('/', /*authenticateJWT,*/ getAllBitacoras);
 router.get('/search', authenticateJWT, searchBitacoras);
 router.get('/:id', authenticateJWT, getBitacoraById);
 router.post('/', authenticateJWT, createBitacora);
