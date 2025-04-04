@@ -43,3 +43,5 @@ INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`
 (14, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
 (15, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
 (16, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO');
+
+ALTER TABLE `carteleras` CHANGE `tipo_info` `tipo_info` ENUM('INFO','WARNING','DANGER') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'INFO';

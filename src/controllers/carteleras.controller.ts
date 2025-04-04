@@ -49,8 +49,8 @@ export const getCartelerasByArea = async (req: Request, res: Response): Promise<
 
 export const getActiveCarteleras = async (req: Request, res: Response): Promise<void> => {
   try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 100;
-    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+    const limit = req.params.limit ? parseInt(req.params.limit) : 100;
+    const offset = req.params.offset ? parseInt(req.params.offset) : 0;
     
     const carteleras = await carteleraModel.findActive(limit, offset);
     res.status(200).json({ carteleras });
@@ -94,7 +94,8 @@ export const createCartelera = async (req: Request, res: Response): Promise<void
       login_registrado: user.login,
       fecha_inicio_publicacion: new Date(fecha_inicio_publicacion),
       fecha_fin_publicacion: new Date(fecha_fin_publicacion),
-      estatus: estatus || 'ACTIVO'
+      estatus: estatus || 'ACTIVO',
+      tipo_info: 'INFO' // Valor por defecto
     };
     
     const id = await carteleraModel.create(newCartelera);
@@ -158,7 +159,8 @@ export const updateCartelera = async (req: Request, res: Response): Promise<void
       login_registrado: cartelera.login_registrado, // Mantener el usuario original que creó la cartelera
       fecha_inicio_publicacion: new Date(fecha_inicio_publicacion),
       fecha_fin_publicacion: new Date(fecha_fin_publicacion),
-      estatus
+      estatus,
+      tipo_info: cartelera.tipo_info 
     };
     
     const success = await carteleraModel.update(Number(id), updatedCartelera);

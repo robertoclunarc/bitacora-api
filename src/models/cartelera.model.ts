@@ -66,13 +66,14 @@ export const create = async (cartelera: Cartelera): Promise<number> => {
       login_registrado,
       fecha_inicio_publicacion,
       fecha_fin_publicacion,
-      estatus
+      estatus,
+      tipo_info
     } = cartelera;
     
     const [result]: any = await pool.query(
       `INSERT INTO carteleras (
         fkarea, descripcion, login_registrado, fecha_inicio_publicacion, 
-        fecha_fin_publicacion, estatus
+        fecha_fin_publicacion, estatus, tipo_info
       ) VALUES (?, ?, ?, ?, ?, ?)`,
       [
         fkarea, 
@@ -80,7 +81,8 @@ export const create = async (cartelera: Cartelera): Promise<number> => {
         login_registrado, 
         fecha_inicio_publicacion, 
         fecha_fin_publicacion, 
-        estatus || 'ACTIVO'
+        estatus || 'ACTIVO',
+        tipo_info || 'INFO',
       ]
     );
     
@@ -98,7 +100,8 @@ export const update = async (id: number, cartelera: Cartelera): Promise<boolean>
       descripcion,
       fecha_inicio_publicacion,
       fecha_fin_publicacion,
-      estatus
+      estatus,
+      tipo_info
     } = cartelera;
     
     const [result]: any = await pool.query(
@@ -107,14 +110,16 @@ export const update = async (id: number, cartelera: Cartelera): Promise<boolean>
         descripcion = ?, 
         fecha_inicio_publicacion = ?, 
         fecha_fin_publicacion = ?, 
-        estatus = ? 
+        estatus = ?,
+        tipo_info = ?
       WHERE idcartelera = ?`,
       [
         fkarea, 
         descripcion, 
         fecha_inicio_publicacion, 
         fecha_fin_publicacion, 
-        estatus, 
+        estatus,
+        tipo_info, 
         id
       ]
     );

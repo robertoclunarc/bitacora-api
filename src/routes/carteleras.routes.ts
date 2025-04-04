@@ -16,7 +16,7 @@ const router = Router();
 // Rutas protegidas con autenticación
 router.get('/', authenticateJWT, getAllCarteleras);
 router.get('/search', authenticateJWT, searchCarteleras);
-router.get('/active', authenticateJWT, getActiveCarteleras);
+router.get('/active/:limit/:offset'/*, authenticateJWT*/, getActiveCarteleras);
 router.get('/:id', authenticateJWT, getCarteleraById);
 router.get('/area/:areaId', authenticateJWT, getCartelerasByArea);
 router.post('/', authenticateJWT, createCartelera);

@@ -91,6 +91,7 @@ export interface AuthUser {
     fecha_inicio_publicacion: Date;
     fecha_fin_publicacion: Date;
     estatus: 'ACTIVO' | 'INACTIVO' | 'VENCIDO';
+    tipo_info: 'WARNING' | 'DANGER' | 'INFO';
   }
   
   export interface SistemaForce {
