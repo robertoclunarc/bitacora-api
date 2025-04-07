@@ -92,6 +92,21 @@ export interface AuthUser {
     fecha_fin_publicacion: Date;
     estatus: 'ACTIVO' | 'INACTIVO' | 'VENCIDO';
     tipo_info: 'WARNING' | 'DANGER' | 'INFO';
+    publico: boolean;
+  }
+
+  export interface CarteleraConArea {
+    idcartelera?: number;
+    fkarea: number;
+    nombrearea: string;
+    descripcion: string;
+    login_registrado: string;
+    fecha_registrado?: Date;
+    fecha_inicio_publicacion: Date;
+    fecha_fin_publicacion: Date;
+    estatus: 'ACTIVO' | 'INACTIVO' | 'VENCIDO';
+    tipo_info: 'WARNING' | 'DANGER' | 'INFO';
+    publico: boolean;
   }
   
   export interface SistemaForce {

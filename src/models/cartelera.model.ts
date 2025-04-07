@@ -1,5 +1,5 @@
 import pool from '../config/database';
-import { Cartelera } from '../types/interfaces';
+import { Cartelera, CarteleraConArea } from '../types/interfaces';
 
 export const findAll = async (limit: number = 100, offset: number = 0): Promise<Cartelera[]> => {
   try {
@@ -45,13 +45,13 @@ export const findByArea = async (areaId: number, limit: number = 100, offset: nu
 export const findActive = async (limit: number = 100, offset: number = 0): Promise<Cartelera[]> => {
   try {
     const [rows] = await pool.query(
-      `SELECT * FROM carteleras 
-       WHERE estatus = 'ACTIVO' 
-       AND CURRENT_DATE() BETWEEN fecha_inicio_publicacion AND fecha_fin_publicacion 
-       ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?`,
+      `SELECT c.*, a.nombrearea FROM carteleras c inner join areas a on c.fkarea = a.idarea
+       WHERE c.estatus = 'ACTIVO' 
+       AND CURRENT_DATE() BETWEEN c.fecha_inicio_publicacion AND c.fecha_fin_publicacion AND c.publico = 1
+       ORDER BY c.fecha_registrado DESC LIMIT ? OFFSET ?`,
       [limit, offset]
     );
-    return rows as Cartelera[];
+    return rows as CarteleraConArea[];
   } catch (error) {
     console.error('Error en findActive carteleras:', error);
     throw error;
@@ -67,7 +67,8 @@ export const create = async (cartelera: Cartelera): Promise<number> => {
       fecha_inicio_publicacion,
       fecha_fin_publicacion,
       estatus,
-      tipo_info
+      tipo_info,
+      publico,
     } = cartelera;
     
     const [result]: any = await pool.query(
@@ -83,6 +84,7 @@ export const create = async (cartelera: Cartelera): Promise<number> => {
         fecha_fin_publicacion, 
         estatus || 'ACTIVO',
         tipo_info || 'INFO',
+        publico  || true
       ]
     );
     
@@ -101,7 +103,8 @@ export const update = async (id: number, cartelera: Cartelera): Promise<boolean>
       fecha_inicio_publicacion,
       fecha_fin_publicacion,
       estatus,
-      tipo_info
+      tipo_info,
+      publico
     } = cartelera;
     
     const [result]: any = await pool.query(
@@ -111,7 +114,8 @@ export const update = async (id: number, cartelera: Cartelera): Promise<boolean>
         fecha_inicio_publicacion = ?, 
         fecha_fin_publicacion = ?, 
         estatus = ?,
-        tipo_info = ?
+        tipo_info = ?,
+        publico = ?
       WHERE idcartelera = ?`,
       [
         fkarea, 
@@ -119,7 +123,8 @@ export const update = async (id: number, cartelera: Cartelera): Promise<boolean>
         fecha_inicio_publicacion, 
         fecha_fin_publicacion, 
         estatus,
-        tipo_info, 
+        tipo_info,
+        publico,
         id
       ]
     );

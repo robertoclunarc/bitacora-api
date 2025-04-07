@@ -95,7 +95,8 @@ export const createCartelera = async (req: Request, res: Response): Promise<void
       fecha_inicio_publicacion: new Date(fecha_inicio_publicacion),
       fecha_fin_publicacion: new Date(fecha_fin_publicacion),
       estatus: estatus || 'ACTIVO',
-      tipo_info: 'INFO' // Valor por defecto
+      tipo_info: 'INFO', // Valor por defecto
+      publico: true // Valor por defecto
     };
     
     const id = await carteleraModel.create(newCartelera);
@@ -125,7 +126,9 @@ export const updateCartelera = async (req: Request, res: Response): Promise<void
       descripcion,
       fecha_inicio_publicacion,
       fecha_fin_publicacion,
-      estatus
+      estatus,
+      tipo_info,
+      publico,
     } = req.body;
     
     if (!fkarea || !descripcion || !fecha_inicio_publicacion || !fecha_fin_publicacion) {
@@ -160,7 +163,8 @@ export const updateCartelera = async (req: Request, res: Response): Promise<void
       fecha_inicio_publicacion: new Date(fecha_inicio_publicacion),
       fecha_fin_publicacion: new Date(fecha_fin_publicacion),
       estatus,
-      tipo_info: cartelera.tipo_info 
+      tipo_info: cartelera.tipo_info,
+      publico: cartelera.publico
     };
     
     const success = await carteleraModel.update(Number(id), updatedCartelera);
