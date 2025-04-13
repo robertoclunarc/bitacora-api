@@ -56,15 +56,20 @@ export const loginUser = async (login: string, password: string): Promise<{ toke
   }
 };
 
-export const changePassword = async (
-  login: string, 
-  currentPassword: string, 
-  newPassword: string
-): Promise<boolean> => {
+export const changePassword = async (login: string, currentPassword: string, newPassword: string): Promise<boolean> => {
   try {
-    // Aquí verificarías la contraseña actual contra la almacenada en la BD
-    // Este es un código simulado - en un sistema real, verificarías contra el hash almacenado
-    const passwordMatch = await bcrypt.compare(currentPassword, '$2a$10$randomhashhere');
+    const [rows]: any = await pool.execute(
+      'SELECT password FROM usuarios WHERE login = ?',
+      [login]
+    );
+    
+    if (rows.length === 0) {
+      return false;
+    }
+
+    const passw = rows[0].password as string;
+    
+    const passwordMatch = await bcrypt.compare(currentPassword, passw || '');
     
     if (!passwordMatch) {
       return false;
@@ -73,11 +78,10 @@ export const changePassword = async (
     const hashedPassword = await bcrypt.hash(newPassword, 10);
     
     // Aquí actualizarías la contraseña en la BD
-    // Esta implementación es simulada - en un sistema real, tendrías una columna para la contraseña
-    // await pool.execute(
-    //   'UPDATE usuarios SET password = ? WHERE login = ?',
-    //   [hashedPassword, login]
-    // );
+    await pool.execute(
+       'UPDATE usuarios SET password = ? WHERE login = ?',
+      [hashedPassword, login]
+    );
 
     return true;
   } catch (error) {

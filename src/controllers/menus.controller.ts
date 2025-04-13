@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import * as menuModel from '../models/menu.model';
 import { Menu } from '../types/interfaces';
-import { RequestWithUser } from '../types/interfaces';
+//import { RequestWithUser } from '../types/interfaces';
+import { RequestWithUser } from '../middlewares/authMiddleware';
 
 export const getAllMenus = async (_req: Request, res: Response): Promise<void> => {
   try {
@@ -247,9 +248,13 @@ export const getMenusByUser = async (req: Request, res: Response): Promise<void>
 };
 
 export const getMenuTree = async (_req: Request, res: Response): Promise<void> => {
+  const user = (_req as RequestWithUser).user;
   try {
-    const user = _req.params.user;
-    const menuTree = await menuModel.getMenuTree(user);
+    if (!user) {
+      res.status(401).json({ message: 'Usuario no autenticado' });
+      return;
+    }
+    const menuTree = await menuModel.getMenuTree(user.login);
     res.status(200).json({ menuTree });
   } catch (error) {
     console.error('Error al obtener árbol de menús:', error);

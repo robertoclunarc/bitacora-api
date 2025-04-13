@@ -33,7 +33,7 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
   try {
     const user = (req as RequestWithUser).user;
     const { currentPassword, newPassword } = req.body;
-
+    
     if (!user) {
       res.status(401).json({ message: 'Usuario no autenticado' });
       return;
@@ -51,7 +51,7 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
       return;
     }
 
-    res.status(200).json({ message: 'Contraseña actualizada correctamente' });
+    res.status(200).json({ success: true, message: 'Contraseña actualizada correctamente' });
   } catch (error) {
     console.error('Error al actualizar contraseña:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
