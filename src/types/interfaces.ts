@@ -79,7 +79,8 @@ export interface AuthUser {
     idintegrantereunion?: number;
     fkreunion: number;
     nombres_apellidos_integrante: string;
-    asistio: boolean;
+    asistio?: boolean;
+    emailintegrante?: string | null;
   }
   
   export interface Cartelera {

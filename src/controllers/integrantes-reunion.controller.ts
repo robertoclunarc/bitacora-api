@@ -46,7 +46,7 @@ export const getIntegrantesByReunion = async (req: Request, res: Response): Prom
 export const createIntegranteReunion = async (req: Request, res: Response): Promise<void> => {
   try {
     const user = ((req as unknown) as RequestWithUser).user;
-    const { fkreunion, nombres_apellidos_integrante, asistio } = req.body;
+    const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = req.body;
     
     if (!user) {
       res.status(401).json({ message: 'Usuario no autenticado' });
@@ -75,7 +75,8 @@ export const createIntegranteReunion = async (req: Request, res: Response): Prom
     const newIntegrante: IntegranteReunion = {
       fkreunion: Number(fkreunion),
       nombres_apellidos_integrante,
-      asistio: asistio || false
+      asistio: asistio || null,
+      emailintegrante: emailintegrante || null
     };
     
     const id = await integranteReunionModel.create(newIntegrante);
@@ -94,7 +95,7 @@ export const updateIntegranteReunion = async (req: Request, res: Response): Prom
   try {
     const user = (req as unknown as RequestWithUser).user;
     const { id } = req.params;
-    const { fkreunion, nombres_apellidos_integrante, asistio } = req.body;
+    const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = req.body;
     
     if (!user) {
       res.status(401).json({ message: 'Usuario no autenticado' });
@@ -131,7 +132,8 @@ export const updateIntegranteReunion = async (req: Request, res: Response): Prom
     const updatedIntegrante: IntegranteReunion = {
       fkreunion: Number(fkreunion),
       nombres_apellidos_integrante,
-      asistio: asistio !== undefined ? asistio : integrante.asistio
+      asistio: asistio !== undefined ? asistio : integrante.asistio,
+      emailintegrante: emailintegrante || null
     };
     
     const success = await integranteReunionModel.update(Number(id), updatedIntegrante);
@@ -208,10 +210,10 @@ export const markAttendance = async (req: Request, res: Response): Promise<void>
       return;
     }
     
-    if (asistio === undefined) {
+    /*if (asistio === undefined) {
       res.status(400).json({ message: 'El campo asistio es requerido' });
       return;
-    }
+    }*/
     
     // Obtener el integrante
     const integrante = await integranteReunionModel.findById(Number(id));
@@ -230,7 +232,7 @@ export const markAttendance = async (req: Request, res: Response): Promise<void>
     }
     
     // Solo el creador de la reunión o un usuario con nivel superior puede marcar asistencia
-    if (reunion.login_registrado !== user.login && user.nivel < 3) {
+    if (reunion.login_registrado !== user.login) {
       res.status(403).json({ message: 'No tienes permiso para marcar asistencia en esta reunión' });
       return;
     }
@@ -276,7 +278,7 @@ export const bulkCreateIntegrantes = async (req: Request, res: Response): Promis
     }
     
     // Solo el creador de la reunión o un usuario con nivel superior puede agregar integrantes
-    if (reunion.login_registrado !== user.login && user.nivel < 3) {
+    if (reunion.login_registrado !== user.login) {
       res.status(403).json({ message: 'No tienes permiso para agregar integrantes a esta reunión' });
       return;
     }
@@ -284,7 +286,8 @@ export const bulkCreateIntegrantes = async (req: Request, res: Response): Promis
     const integrantesData: IntegranteReunion[] = integrantes.map((nombre: string) => ({
       fkreunion: Number(reunionId),
       nombres_apellidos_integrante: nombre,
-      asistio: false
+      asistio: false,
+      emailintegrante: null
     }));
     
     const success = await integranteReunionModel.bulkCreate(integrantesData);

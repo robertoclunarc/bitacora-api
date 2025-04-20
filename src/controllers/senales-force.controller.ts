@@ -40,7 +40,7 @@ export const createSenalForce = async (req: Request, res: Response): Promise<voi
     }
     
     // Verificar nivel de acceso
-    if (user.nivel < 2) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para crear señales force' });
       return;
     }
@@ -79,7 +79,7 @@ export const updateSenalForce = async (req: Request, res: Response): Promise<voi
     }
     
     // Verificar nivel de acceso
-    if (user.nivel < 2) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para actualizar señales force' });
       return;
     }
@@ -131,7 +131,7 @@ export const deleteSenalForce = async (req: Request, res: Response): Promise<voi
     }
     
     // Verificar nivel de acceso (solo nivel alto puede eliminar)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para eliminar señales force' });
       return;
     }

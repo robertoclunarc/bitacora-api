@@ -11,7 +11,7 @@ export const getAllForce = async (req: Request, res: Response): Promise<void> =>
     const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
     
     const forceItems = await forceModel.findAll(limit, offset);
-    res.status(200).json({ force: forceItems });
+    res.status(200).json({ forces: forceItems });
   } catch (error) {
     console.error('Error al obtener registros force:', error);
     res.status(500).json({ message: 'Error interno del servidor' });
@@ -28,7 +28,7 @@ export const getForceById = async (req: Request, res: Response): Promise<void> =
       return;
     }
     
-    res.status(200).json({ force: forceItem });
+    res.status(200).json({ forces: forceItem });
   } catch (error) {
     console.error(`Error al obtener registro force ${req.params.id}:`, error);
     res.status(500).json({ message: 'Error interno del servidor' });
@@ -50,7 +50,7 @@ export const getForceBySistema = async (req: Request, res: Response): Promise<vo
     }
     
     const forceItems = await forceModel.findBySistema(Number(sistemaId), limit, offset);
-    res.status(200).json({ force: forceItems });
+    res.status(200).json({ forces: forceItems });
   } catch (error) {
     console.error(`Error al obtener registros force por sistema ${req.params.sistemaId}:`, error);
     res.status(500).json({ message: 'Error interno del servidor' });
@@ -72,7 +72,7 @@ export const getForceBySenal = async (req: Request, res: Response): Promise<void
     }
     
     const forceItems = await forceModel.findBySenal(Number(senalId), limit, offset);
-    res.status(200).json({ force: forceItems });
+    res.status(200).json({ forces: forceItems });
   } catch (error) {
     console.error(`Error al obtener registros force por señal ${req.params.senalId}:`, error);
     res.status(500).json({ message: 'Error interno del servidor' });
@@ -149,7 +149,7 @@ export const createForce = async (req: Request, res: Response): Promise<void> =>
     
     res.status(201).json({
       message: 'Registro force creado exitosamente',
-      force: { idforce: id, ...newForce }
+      forces: { idforce: id, ...newForce }
     });
   } catch (error) {
     console.error('Error al crear registro force:', error);
@@ -176,7 +176,7 @@ export const updateForce = async (req: Request, res: Response): Promise<void> =>
     }
     
     // Solo el creador o un usuario con nivel superior puede modificar el registro
-    if (forceItem.login_registrado !== user.login && user.nivel < 3) {
+    if (forceItem.login_registrado !== user.login) {
       res.status(403).json({ message: 'No tienes permiso para modificar este registro force' });
       return;
     }
@@ -254,7 +254,7 @@ export const updateForce = async (req: Request, res: Response): Promise<void> =>
     
     res.status(200).json({
       message: 'Registro force actualizado exitosamente',
-      force: { idforce: Number(id), ...updatedForce }
+      forces: { idforce: Number(id), ...updatedForce }
     });
   } catch (error) {
     console.error(`Error al actualizar registro force ${req.params.id}:`, error);
@@ -293,7 +293,7 @@ export const updateForceStatus = async (req: Request, res: Response): Promise<vo
     }
     
     // Solo el creador o un usuario con nivel superior puede modificar el estatus
-    if (forceItem.login_registrado !== user.login && user.nivel < 3) {
+    if (forceItem.login_registrado !== user.login ) {
       res.status(403).json({ message: 'No tienes permiso para modificar el estatus de este registro force' });
       return;
     }
@@ -343,7 +343,7 @@ export const deleteForce = async (req: Request, res: Response): Promise<void> =>
     }
     
     // Solo el creador o un usuario con nivel superior puede eliminar el registro
-    if (forceItem.login_registrado !== user.login && user.nivel < 3) {
+    if (forceItem.login_registrado !== user.login ) {
       res.status(403).json({ message: 'No tienes permiso para eliminar este registro force' });
       return;
     }

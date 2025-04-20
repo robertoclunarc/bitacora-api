@@ -15,8 +15,8 @@ router.get('/', authenticateJWT, getAllAreas);
 router.get('/:id', authenticateJWT, getAreaById);
 
 // Rutas protegidas con autenticación y nivel de acceso
-router.post('/', [authenticateJWT, checkRole(2)], createArea);
-router.put('/:id', [authenticateJWT, checkRole(2)], updateArea);
-router.delete('/:id', [authenticateJWT, checkRole(3)], deleteArea); // Solo nivel alto puede eliminar
+router.post('/', [authenticateJWT, checkRole(1)], createArea);
+router.put('/:id', [authenticateJWT, checkRole(1)], updateArea);
+router.delete('/:id', [authenticateJWT, checkRole(1)], deleteArea); // Solo nivel alto puede eliminar
 
 export default router;

@@ -12,13 +12,13 @@ import { authenticateJWT, checkRole } from '../middlewares/authMiddleware';
 const router = Router();
 
 // Rutas protegidas con autenticación
-router.get('/', authenticateJWT, getAllSistemasForce);
+router.get('/', [authenticateJWT], getAllSistemasForce);
 router.get('/search', authenticateJWT, searchSistemasForce);
 router.get('/:id', authenticateJWT, getSistemaForceById);
 
 // Rutas protegidas con autenticación y nivel de acceso
-router.post('/', [authenticateJWT, checkRole(2)], createSistemaForce);
-router.put('/:id', [authenticateJWT, checkRole(2)], updateSistemaForce);
-router.delete('/:id', [authenticateJWT, checkRole(3)], deleteSistemaForce);
+router.post('/', [authenticateJWT, checkRole(1)], createSistemaForce);
+router.put('/:id', [authenticateJWT, checkRole(1)], updateSistemaForce);
+router.delete('/:id', [authenticateJWT, checkRole(1)], deleteSistemaForce);
 
 export default router;

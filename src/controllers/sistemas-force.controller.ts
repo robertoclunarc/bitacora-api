@@ -40,7 +40,7 @@ export const createSistemaForce = async (req: Request, res: Response): Promise<v
     }
     
     // Verificar nivel de acceso
-    if (user.nivel < 2) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para crear sistemas force' });
       return;
     }
@@ -79,7 +79,7 @@ export const updateSistemaForce = async (req: Request, res: Response): Promise<v
     }
     
     // Verificar nivel de acceso
-    if (user.nivel < 2) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para actualizar sistemas force' });
       return;
     }
@@ -131,7 +131,7 @@ export const deleteSistemaForce = async (req: Request, res: Response): Promise<v
     }
     
     // Verificar nivel de acceso (solo nivel alto puede eliminar)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para eliminar sistemas force' });
       return;
     }

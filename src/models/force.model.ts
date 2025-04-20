@@ -4,7 +4,7 @@ import { Force } from '../types/interfaces';
 export const findAll = async (limit: number = 100, offset: number = 0): Promise<Force[]> => {
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM force ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
+      'SELECT * FROM forces ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
       [limit, offset]
     );
     return rows as Force[];
@@ -16,7 +16,7 @@ export const findAll = async (limit: number = 100, offset: number = 0): Promise<
 
 export const findById = async (id: number): Promise<Force | null> => {
   try {
-    const [rows]: any = await pool.query('SELECT * FROM force WHERE idforce = ?', [id]);
+    const [rows]: any = await pool.query('SELECT * FROM forces WHERE idforce = ?', [id]);
     
     if (rows.length === 0) {
       return null;
@@ -32,7 +32,7 @@ export const findById = async (id: number): Promise<Force | null> => {
 export const findBySistema = async (sistemaId: number, limit: number = 100, offset: number = 0): Promise<Force[]> => {
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM force WHERE fksistema = ? ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
+      'SELECT * FROM forces WHERE fksistema = ? ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
       [sistemaId, limit, offset]
     );
     return rows as Force[];
@@ -45,7 +45,7 @@ export const findBySistema = async (sistemaId: number, limit: number = 100, offs
 export const findBySenal = async (senalId: number, limit: number = 100, offset: number = 0): Promise<Force[]> => {
   try {
     const [rows] = await pool.query(
-      'SELECT * FROM force WHERE fksenal = ? ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
+      'SELECT * FROM forces WHERE fksenal = ? ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
       [senalId, limit, offset]
     );
     return rows as Force[];
@@ -71,7 +71,7 @@ export const create = async (force: Force): Promise<number> => {
     } = force;
     
     const [result]: any = await pool.query(
-      `INSERT INTO force (
+      `INSERT INTO forces (
         fksenal, fksistema, causas, valor, solicitado_por, 
         autorizado_por, ejecutor_por, tipoforce, estatusforce, 
         login_registrado
@@ -113,7 +113,7 @@ export const update = async (id: number, force: Force): Promise<boolean> => {
     } = force;
     
     const [result]: any = await pool.query(
-      `UPDATE force SET 
+      `UPDATE forces SET 
         fksenal = ?, 
         fksistema = ?, 
         causas = ?, 
@@ -151,7 +151,7 @@ export const update = async (id: number, force: Force): Promise<boolean> => {
 export const updateStatus = async (id: number, estatusforce: string, login_modificacion: string): Promise<boolean> => {
   try {
     const [result]: any = await pool.query(
-      `UPDATE force SET 
+      `UPDATE forces SET 
         estatusforce = ?,
         fecha_modificacion = NOW(),
         login_modificacion = ?
@@ -168,7 +168,7 @@ export const updateStatus = async (id: number, estatusforce: string, login_modif
 
 export const remove = async (id: number): Promise<boolean> => {
   try {
-    const [result]: any = await pool.query('DELETE FROM force WHERE idforce = ?', [id]);
+    const [result]: any = await pool.query('DELETE FROM forces WHERE idforce = ?', [id]);
     return result.affectedRows > 0;
   } catch (error) {
     console.error(`Error en remove force ${id}:`, error);
@@ -193,7 +193,7 @@ export const search = async (
   offset: number = 0
 ): Promise<Force[]> => {
   try {
-    let query = 'SELECT * FROM force WHERE 1=1';
+    let query = 'SELECT * FROM forces WHERE 1=1';
     const params: any[] = [];
 
     if (criteria.fksenal) {
@@ -271,7 +271,7 @@ export const countForce = async (criteria: {
   keyword?: string
 }): Promise<number> => {
   try {
-    let query = 'SELECT COUNT(*) as total FROM force WHERE 1=1';
+    let query = 'SELECT COUNT(*) as total FROM forces WHERE 1=1';
     const params: any[] = [];
 
     if (criteria.fksenal) {

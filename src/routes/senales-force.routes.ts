@@ -17,8 +17,8 @@ router.get('/search', authenticateJWT, searchSenalesForce);
 router.get('/:id', authenticateJWT, getSenalForceById);
 
 // Rutas protegidas con autenticación y nivel de acceso
-router.post('/', [authenticateJWT, checkRole(2)], createSenalForce);
-router.put('/:id', [authenticateJWT, checkRole(2)], updateSenalForce);
-router.delete('/:id', [authenticateJWT, checkRole(3)], deleteSenalForce);
+router.post('/', [authenticateJWT, checkRole(1)], createSenalForce);
+router.put('/:id', [authenticateJWT, checkRole(1)], updateSenalForce);
+router.delete('/:id', [authenticateJWT, checkRole(1)], deleteSenalForce);
 
 export default router;

@@ -41,10 +41,10 @@ export const findByReunion = async (reunionId: number): Promise<IntegranteReunio
 
 export const create = async (integranteReunion: IntegranteReunion): Promise<number> => {
   try {
-    const { fkreunion, nombres_apellidos_integrante, asistio } = integranteReunion;
+    const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = integranteReunion;
     const [result]: any = await pool.query(
-      'INSERT INTO integrantes_reuniones (fkreunion, nombres_apellidos_integrante, asistio) VALUES (?, ?, ?)',
-      [fkreunion, nombres_apellidos_integrante, asistio || false]
+      'INSERT INTO integrantes_reuniones (fkreunion, nombres_apellidos_integrante, asistio, emailintegrante) VALUES (?, ?, ?, ?)',
+      [fkreunion, nombres_apellidos_integrante, asistio || null, emailintegrante || null]
     );
     
     return result.insertId;
@@ -56,10 +56,10 @@ export const create = async (integranteReunion: IntegranteReunion): Promise<numb
 
 export const update = async (id: number, integranteReunion: IntegranteReunion): Promise<boolean> => {
   try {
-    const { fkreunion, nombres_apellidos_integrante, asistio } = integranteReunion;
+    const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = integranteReunion;
     const [result]: any = await pool.query(
-      'UPDATE integrantes_reuniones SET fkreunion = ?, nombres_apellidos_integrante = ?, asistio = ? WHERE idintegrantereunion = ?',
-      [fkreunion, nombres_apellidos_integrante, asistio, id]
+      'UPDATE integrantes_reuniones SET fkreunion = ?, nombres_apellidos_integrante = ?, asistio = ?, emailintegrante = ? WHERE idintegrantereunion = ?',
+      [fkreunion, nombres_apellidos_integrante, asistio || null, emailintegrante, id]
     );
     
     return result.affectedRows > 0;
@@ -98,7 +98,8 @@ export const bulkCreate = async (integrantesReunion: IntegranteReunion[]): Promi
     const values = integrantesReunion.map(integrante => [
       integrante.fkreunion,
       integrante.nombres_apellidos_integrante,
-      integrante.asistio || false
+      integrante.asistio || false,
+      integrante.emailintegrante
     ]);
     
     if (values.length === 0) {
@@ -109,7 +110,7 @@ export const bulkCreate = async (integrantesReunion: IntegranteReunion[]): Promi
     const flatValues = values.flat();
     
     await pool.query(
-      `INSERT INTO integrantes_reuniones (fkreunion, nombres_apellidos_integrante, asistio) VALUES ${placeholders}`,
+      `INSERT INTO integrantes_reuniones (fkreunion, nombres_apellidos_integrante, asistio, emailintegrante) VALUES ${placeholders}`,
       flatValues
     );
     
