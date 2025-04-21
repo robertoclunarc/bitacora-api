@@ -38,7 +38,8 @@ export const loginUser = async (login: string, password: string): Promise<{ toke
       login: user.login,
       nombres: user.nombres,
       nivel: user.nivel,
-      fkarea: user.fkarea
+      fkarea: user.fkarea,
+      trabajador: user.trabajador,
     };
 
     const options: SignOptions = { expiresIn: JWT_EXPIRES_IN };

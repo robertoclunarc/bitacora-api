@@ -4,6 +4,7 @@ export interface AuthUser {
     nombres: string;
     nivel: number;
     fkarea?: number;
+    trabajador?: string;
   }
   
   export interface RequestWithUser extends Request {
