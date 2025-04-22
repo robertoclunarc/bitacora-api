@@ -249,7 +249,6 @@ export const getMenusByUser = async (req: Request, res: Response): Promise<void>
 
 export const getMenuTree = async (_req: Request, res: Response): Promise<void> => {
   const user = (_req as RequestWithUser).user;
-  console.log('Usuario autenticado:', user);
   try {
     if (!user) {
       res.status(401).json({ message: 'Usuario no autenticado' });

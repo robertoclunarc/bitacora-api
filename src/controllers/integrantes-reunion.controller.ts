@@ -124,7 +124,7 @@ export const updateIntegranteReunion = async (req: Request, res: Response): Prom
     }
     
     // Solo el creador de la reunión o un usuario con nivel superior puede modificar integrantes
-    if (reunion.login_registrado !== user.login && user.nivel < 3) {
+    if (reunion.login_registrado !== user.login && user.nivel <= 3) {
       res.status(403).json({ message: 'No tienes permiso para modificar integrantes de esta reunión' });
       return;
     }
@@ -135,7 +135,6 @@ export const updateIntegranteReunion = async (req: Request, res: Response): Prom
       asistio: asistio !== undefined ? asistio : integrante.asistio,
       emailintegrante: emailintegrante || null
     };
-    
     const success = await integranteReunionModel.update(Number(id), updatedIntegrante);
     
     if (!success) {

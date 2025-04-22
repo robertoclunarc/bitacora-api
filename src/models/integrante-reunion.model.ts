@@ -18,8 +18,11 @@ export const findById = async (id: number): Promise<IntegranteReunion | null> =>
     if (rows.length === 0) {
       return null;
     }
-    
-    return rows[0] as IntegranteReunion;
+    const rowsWithAsistio = (rows as any[]).map((row: any) => ({
+      ...row,
+      asistio: row.asistio === 1 ? true : row.asistio === 0 ? false : null
+    }));
+    return rowsWithAsistio[0] as IntegranteReunion;
   } catch (error) {
     console.error(`Error en findById integrante_reunion ${id}:`, error);
     throw error;
@@ -32,7 +35,11 @@ export const findByReunion = async (reunionId: number): Promise<IntegranteReunio
       'SELECT * FROM integrantes_reuniones WHERE fkreunion = ? ORDER BY nombres_apellidos_integrante',
       [reunionId]
     );
-    return rows as IntegranteReunion[];
+    const rowsWithAsistio = (rows as any[]).map((row: any) => ({
+      ...row,
+      asistio: row.asistio === 1 ? true : row.asistio === 0 ? false : null
+    }));
+    return rowsWithAsistio as IntegranteReunion[];
   } catch (error) {
     console.error(`Error en findByReunion integrantes_reuniones ${reunionId}:`, error);
     throw error;
@@ -42,9 +49,11 @@ export const findByReunion = async (reunionId: number): Promise<IntegranteReunio
 export const create = async (integranteReunion: IntegranteReunion): Promise<number> => {
   try {
     const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = integranteReunion;
+    const asistioValue = asistio === true ? 1 : asistio === false ? 0 : null;
+    
     const [result]: any = await pool.query(
       'INSERT INTO integrantes_reuniones (fkreunion, nombres_apellidos_integrante, asistio, emailintegrante) VALUES (?, ?, ?, ?)',
-      [fkreunion, nombres_apellidos_integrante, asistio || null, emailintegrante || null]
+      [fkreunion, nombres_apellidos_integrante, asistioValue, emailintegrante || null]
     );
     
     return result.insertId;
@@ -59,7 +68,7 @@ export const update = async (id: number, integranteReunion: IntegranteReunion): 
     const { fkreunion, nombres_apellidos_integrante, asistio, emailintegrante } = integranteReunion;
     const [result]: any = await pool.query(
       'UPDATE integrantes_reuniones SET fkreunion = ?, nombres_apellidos_integrante = ?, asistio = ?, emailintegrante = ? WHERE idintegrantereunion = ?',
-      [fkreunion, nombres_apellidos_integrante, asistio || null, emailintegrante, id]
+      [fkreunion, nombres_apellidos_integrante, asistio, emailintegrante, id]
     );
     
     return result.affectedRows > 0;
