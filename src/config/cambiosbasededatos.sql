@@ -105,3 +105,11 @@ ALTER TABLE `bitacora`
 ALTER TABLE `bitacora`
   ADD CONSTRAINT `fk_bitacora_equipo` FOREIGN KEY (`fkequipo`) REFERENCES `equipos` (`idequipo`) ON DELETE SET NULL ON UPDATE CASCADE;
 COMMIT;
+
+INSERT INTO `menus` (`idmenu`, `idpadre`, `name`, `url`, `href`, `icon`, `badge_text`, `badge_variant`, `badge_class`, `variant`, `attributes`, `attributes_element`, `divider`, `class`, `label_class`, `label_variant`, `wrapper_attributes`, `wrapper_element`, `linkprops`, `title`, `estatus`, `orden`) VALUES
+(17, 4, 'Incidencias', '/incidencias', 'CNavItem', 'cilBellExclamation', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 5),
+(18, 4, 'Actividades', '/tareas', 'CNavItem', 'cilFeaturedPlaylist', 'Tareas', 'warning', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 5)
+
+INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`, `pselect`, `export`, `estatus`) VALUES
+(17, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
+(18, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO')

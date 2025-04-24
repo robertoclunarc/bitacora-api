@@ -112,7 +112,8 @@ export interface AuthUser {
   export interface CarteleraConArea {
     idcartelera?: number;
     fkarea: number;
-    nombrearea: string;
+    nombrearea?: string;
+    nombre_usuario?: string;
     descripcion: string;
     login_registrado: string;
     fecha_registrado?: Date;
@@ -251,4 +252,11 @@ export interface AuthUser {
     turno?: string;
     tipo: string;
     // ... otros campos según sea necesario
+  }
+
+  export interface Pagination {
+    total: number;
+    totalPages: number;
+    currentPage: number;
+    limit: number;
   }

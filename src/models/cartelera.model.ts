@@ -1,13 +1,112 @@
 import pool from '../config/database';
-import { Cartelera, CarteleraConArea } from '../types/interfaces';
+import { Cartelera, CarteleraConArea, AuthUser } from '../types/interfaces';
 
-export const findAll = async (limit: number = 100, offset: number = 0): Promise<Cartelera[]> => {
+export const findAll = async (limit: number = 10, offset: number = 0, page: number = 1, param: any, user: AuthUser ): Promise<any> => {
   try {
     const [rows] = await pool.query(
       'SELECT * FROM carteleras ORDER BY fecha_registrado DESC LIMIT ? OFFSET ?',
       [limit, offset]
     );
-    return rows as Cartelera[];
+    // Construir condiciones
+    let conditions: string[] = [];
+    let params: (string | number)[] = [];
+    
+    // Filtrar por descripción
+    if (param.descripcion && typeof param.descripcion === 'string') {
+      conditions.push('c.descripcion LIKE ?');
+      params.push(`%${param.descripcion}%`);
+    }
+    
+    // Filtrar por fechas
+    if (param.fecha_inicio && typeof param.fecha_inicio === 'string') {
+      conditions.push('c.fecha_inicio_publicacion >= ?');
+      params.push(param.fecha_inicio);
+    }
+    
+    if (param.fecha_fin && typeof param.fecha_fin === 'string') {
+      conditions.push('c.fecha_fin_publicacion <= ?');
+      params.push(param.fecha_fin);
+    }
+    
+    // Filtrar por estatus
+    if (param.estatus && typeof param.estatus === 'string') {
+      conditions.push('c.estatus = ?');
+      params.push(param.estatus);
+    }
+    
+    // Filtrar por tipo de información
+    if (param.tipo_info && typeof param.tipo_info === 'string') {
+      conditions.push('c.tipo_info = ?');
+      params.push(param.tipo_info);
+    }
+    
+    // Filtrar por área
+    if (param.fkarea && !isNaN(Number(param.fkarea))) {
+      conditions.push('c.fkarea = ?');
+      params.push(Number(param.fkarea));
+    }
+    
+    // Filtrado de acceso según área y campo público
+    const userArea = user.fkarea 
+    const userLogin = user.login;
+    const isAdmin = user.nivel <= 3;
+    
+    if (!isAdmin) {
+      if (userArea && userLogin) {
+        conditions.push('(c.publico = 1 OR c.fkarea = ? OR c.login_registrado = ?)');      
+        params.push(userArea, userLogin);
+      }      
+    }
+    
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+
+    const query = `
+      SELECT c.*, 
+        a.nombrearea,
+        u.nombres AS nombre_usuario
+      FROM carteleras c
+      LEFT JOIN areas a ON c.fkarea = a.idarea
+      LEFT JOIN usuarios u ON c.login_registrado = u.login
+      ${whereClause}
+      ORDER BY c.fecha_registrado DESC
+      LIMIT ? OFFSET ?
+    `;
+    
+    const countQuery = `
+      SELECT COUNT(*) AS total 
+      FROM carteleras c
+      LEFT JOIN areas a ON c.fkarea = a.idarea
+      ${whereClause}
+    `;
+    
+    // Ejecutar consultas
+    const queryParams = [...params, limit, offset];
+    const [rowsCarteleras] = await pool.query(query, queryParams);
+    const carteleras = rowsCarteleras as CarteleraConArea[];
+    
+    // Actualizar estatus de carteleras vencidas
+    const today = new Date().toISOString().split('T')[0];
+    await pool.query(
+      'UPDATE carteleras SET estatus = "VENCIDO" WHERE fecha_fin_publicacion < ? AND estatus = "ACTIVO"',
+      [today]
+    );
+    
+    // Obtener total de registros
+    const [rowCountResult] = await pool.query(countQuery, params);
+    const countResult = rowCountResult as any[];
+    const total = countResult[0].total;
+    const totalPages = Math.ceil(total / limit);
+    
+    return({
+      carteleras,
+      pagination: {
+        total,
+        totalPages,
+        currentPage: page,
+        limit: limit
+      }
+    });
+
   } catch (error) {
     console.error('Error en findAll carteleras:', error);
     throw error;
@@ -17,12 +116,13 @@ export const findAll = async (limit: number = 100, offset: number = 0): Promise<
 export const findById = async (id: number): Promise<Cartelera | null> => {
   try {
     const [rows]: any = await pool.query('SELECT * FROM carteleras WHERE idcartelera = ?', [id]);
-    
     if (rows.length === 0) {
       return null;
     }
+
+    const cartelera = rows[0] as Cartelera;    
     
-    return rows[0] as Cartelera;
+    return cartelera;
   } catch (error) {
     console.error(`Error en findById cartelera ${id}:`, error);
     throw error;
