@@ -46,3 +46,62 @@ INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`
 
 ALTER TABLE `carteleras` CHANGE `tipo_info` `tipo_info` ENUM('INFO','WARNING','DANGER') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'INFO';
 ALTER TABLE `carteleras` ADD `publico` BOOLEAN NOT NULL DEFAULT TRUE AFTER `tipo_info`;
+
+INSERT INTO `tipobitacoras` (`idtipo`, `descripciontipo`) VALUES (NULL, 'ELECTRICA'), (NULL, 'SUPERVISION MATENIMIENTO'), (NULL, 'MATENIMIENTO GENERAL'), (NULL, 'CONTROL'), (NULL, 'INSTRUMENTACION'), (NULL, 'MACANICA'), (NULL, 'OPERACION'), (NULL, 'PROCESO'), (NULL, 'LABORATORIO'), (NULL, 'LOGISTICA'), (NULL, 'BRIQUETEADORA'), (NULL, 'TECNICO DE CAMPO'), (NULL, 'TECNOLOGIA');
+
+CREATE TABLE `archivos` (
+  `idarchivo` int(11) NOT NULL AUTO_INCREMENT,
+  `fkbitacora` int(11) NOT NULL,
+  `nombre_archivo` varchar(255) NOT NULL,
+  `ruta_archivo` varchar(255) NOT NULL,
+  `tipo_archivo` varchar(100) DEFAULT NULL,
+  `tamano` bigint(20) NOT NULL,
+  `fecha_carga` timestamp NOT NULL DEFAULT current_timestamp(),
+  `login_carga` varchar(6) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`idarchivo`),
+  KEY `fk_archivos_bitacora` (`fkbitacora`),
+  CONSTRAINT `fk_archivos_bitacora` FOREIGN KEY (`fkbitacora`) REFERENCES `bitacora` (`idbitacora`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `bitacora` (
+  `idbitacora` int(11) NOT NULL,
+  `fecha` date NOT NULL,
+  `turno` enum('1','2','3') NOT NULL,
+  `login` varchar(6) NOT NULL,
+  `fecha_hora_registrado` timestamp NOT NULL DEFAULT current_timestamp(),
+  `fkequipo` int(11) DEFAULT NULL,
+  `tema` varchar(255) DEFAULT NULL,
+  `descripcion` text NOT NULL,
+  `estatus` enum('ACTIVO','INACTIVO','PENDIENTE','FINALIZADO') NOT NULL DEFAULT 'ACTIVO',
+  `critico` tinyint(1) NOT NULL DEFAULT 0,
+  `lugar` TEXT NULL DEFAULT NULL,
+  `hora` time NOT NULL,
+  `fkarea` int(11) NOT NULL,
+  `tipo` varchar(20) DEFAULT NULL,
+  `responsables` text NOT NULL,
+  `login_modificacion` varchar(6) DEFAULT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  `observacion` text DEFAULT NULL,
+  `que_se_hizo` text DEFAULT NULL,
+  `horas_duracion` decimal(10,0) DEFAULT NULL,
+  `publico` BOOLEAN NOT NULL DEFAULT TRUE,
+  `en_cartelera` BOOLEAN NULL DEFAULT NULL
+);
+
+ALTER TABLE `bitacora`
+  ADD PRIMARY KEY (`idbitacora`),
+  ADD KEY `idx_bitacora_fecha` (`fecha`),
+  ADD KEY `idx_bitacora_login` (`login`),
+  ADD KEY `idx_bitacora_fkequipo` (`fkequipo`),
+  ADD KEY `idx_bitacora_estatus` (`estatus`),
+  ADD KEY `idx_bitacora_critico` (`critico`),
+  ADD KEY `fkarea` (`fkarea`);
+
+ALTER TABLE `bitacora`
+  MODIFY `idbitacora` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `bitacora`
+  ADD CONSTRAINT `fk_bitacora_equipo` FOREIGN KEY (`fkequipo`) REFERENCES `equipos` (`idequipo`) ON DELETE SET NULL ON UPDATE CASCADE;
+COMMIT;

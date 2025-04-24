@@ -255,7 +255,7 @@ export const getMenuTree = async (_req: Request, res: Response): Promise<void> =
       return;
     }
     const menuTree = await menuModel.getMenuTree(user.login);
-    console.log('Menú árbol:', menuTree);
+    //console.log('Menú árbol:', menuTree);
     res.status(200).json({ menuTree });
   } catch (error) {
     console.error('Error al obtener árbol de menús:', error);

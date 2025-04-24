@@ -74,8 +74,8 @@ export const create = async (cartelera: Cartelera): Promise<number> => {
     const [result]: any = await pool.query(
       `INSERT INTO carteleras (
         fkarea, descripcion, login_registrado, fecha_inicio_publicacion, 
-        fecha_fin_publicacion, estatus, tipo_info
-      ) VALUES (?, ?, ?, ?, ?, ?)`,
+        fecha_fin_publicacion, estatus, tipo_info, publico
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
       [
         fkarea, 
         descripcion, 
@@ -142,6 +142,16 @@ export const remove = async (id: number): Promise<boolean> => {
     return result.affectedRows > 0;
   } catch (error) {
     console.error(`Error en remove cartelera ${id}:`, error);
+    throw error;
+  }
+};
+
+export const updateStatus = async (id: number, estatus: string): Promise<boolean> => {
+  try {
+    const [result]: any = await pool.query('UPDATE carteleras SET estatus=? WHERE idcartelera = ?', [estatus, id]);
+    return result.affectedRows > 0;
+  } catch (error) {
+    console.error(`Error cambiendo estatus cartelera ${id}:`, error);
     throw error;
   }
 };

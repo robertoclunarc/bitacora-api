@@ -34,6 +34,7 @@ export interface AuthUser {
   export interface Bitacora {
     idbitacora?: number;
     fecha: Date;
+    hora: string,
     turno: '1' | '2' | '3';
     login: string;
     fecha_hora_registrado?: Date;
@@ -41,7 +42,18 @@ export interface AuthUser {
     tema?: string;
     descripcion: string;
     estatus: 'ACTIVO' | 'INACTIVO' | 'PENDIENTE' | 'FINALIZADO';
-    critico: boolean;
+    critico?: boolean;    
+    fkarea?: number,
+    lugar?: string;
+    tipo?: string;
+    responsables?: string;      
+    observacion?: string;
+    que_se_hizo?: string;
+    horas_duracion?: number;
+    publico?: number;
+    login_modificacion?: string
+    fecha_modificacion?: string
+    en_cartelera?: number
   }
 
   export interface Equipo {
@@ -199,6 +211,36 @@ export interface AuthUser {
     login_registrado: string;
     fecha_modificacion?: Date | null;
     login_modificacion?: string | null;
+  }
+
+  export interface MulterFile {
+    fieldname: string;
+    originalname: string;
+    encoding: string;
+    mimetype: string;
+    size: number;
+    destination: string;
+    filename: string;
+    path: string;
+    buffer?: Buffer;
+  }
+  
+  export interface Archivo {
+    idarchivo?: number;
+    fkbitacora: number;
+    nombre_archivo: string;
+    ruta_archivo: string;
+    tipo_archivo: string;
+    tamano: number;
+    login_carga: string;
+    descripcion: string | null;
+    fecha_carga?: Date;
+    activo?: number;
+  }
+
+  export interface TipoBitacora {
+    idtipo: number;
+    descripciontipo: string;
   }
   
   // Interfaces para tablas legacy (puedes agregarlas si las necesitas)
