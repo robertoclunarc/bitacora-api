@@ -38,7 +38,7 @@ export interface AuthUser {
     turno: '1' | '2' | '3';
     login: string;
     fecha_hora_registrado?: Date;
-    fkequipo?: number;
+    fkequipo?: number | null;
     tema?: string;
     descripcion: string;
     estatus: 'ACTIVO' | 'INACTIVO' | 'PENDIENTE' | 'FINALIZADO';
@@ -259,4 +259,68 @@ export interface AuthUser {
     totalPages: number;
     currentPage: number;
     limit: number;
+  }
+
+  export interface Incidencia {
+    idincidencia?: number;
+    descripcion: string;
+    fecha: string;
+    hora: string;
+    observacion?: string;
+    que_se_hizo?: string;
+    tipoincidencia: string;
+    critico?: boolean;
+    login?: string;
+    fecha_registro?: string;
+    login_modificacion?: string | null;
+    fecha_modificacion?: string;
+    fkarea: number;
+    involucrados?: string;
+    en_cartelera?: boolean;
+    estatus: string;
+    fkequipo?: number | null;
+  }
+  
+  export interface IncidenciaWithDetails extends Incidencia {
+    nombre_area?: string;
+    nombre_usuario?: string;
+    nombre_equipo?: string;
+  }
+
+  export interface Tarea {
+    idtarea?: number;
+    fecha_registrado?: Date;
+    login_registrado: string;
+    tipo_tarea: 'NORMAL' | 'URGENTE' | 'PREVENTIVA' | 'CORRECTIVA';
+    descripcion: string;
+    estatus: 'PENDIENTE' | 'EN_PROCESO' | 'FINALIZADA' | 'CANCELADA';
+    fecha_modificacion?: Date | null;
+    login_modificacion?: string | null;
+    fkarea: number;
+  }
+  
+  export interface TareaWithDetails extends Tarea {
+    nombre_usuario?: string;
+    nombre_area?: string;
+    detalles_count?: number;
+  }
+
+  export interface DetalleTarea {
+    iddetalletarea?: number;
+    fktarea: number;
+    fkequipo?: number | null;
+    descripcion: string;
+    responsable: string;
+    estatus: 'PENDIENTE' | 'EN_PROCESO' | 'FINALIZADA' | 'CANCELADA';
+    fecha_inicio: Date;
+    fecha_fin?: Date | null;
+    fecha_registro?: Date;
+    login_registrado: string;
+    fecha_modificacion?: Date | null;
+    login_modificacion?: string | null;
+  }
+  
+  export interface DetalleTareaWithDetails extends DetalleTarea {
+    nombre_usuario?: string;
+    nombre_equipo?: string;
   }

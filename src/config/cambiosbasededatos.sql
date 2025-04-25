@@ -113,3 +113,28 @@ INSERT INTO `menus` (`idmenu`, `idpadre`, `name`, `url`, `href`, `icon`, `badge_
 INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`, `pselect`, `export`, `estatus`) VALUES
 (17, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
 (18, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO')
+
+CREATE TABLE `incidencias` (
+  `idincidencia` int(11) NOT NULL,
+  `descripcion` text NOT NULL,
+  `fecha` date NOT NULL,
+  `hora` time NOT NULL,
+  `observacion` text DEFAULT NULL,
+  `que_se_hizo` text DEFAULT NULL,
+  `tipoincidencia` varchar(50) NOT NULL,
+  `critico` tinyint(1) DEFAULT NULL,
+  `login` varchar(6) DEFAULT NULL,
+  `fecha_registro` datetime DEFAULT NULL,
+  `login_modificacion` varchar(6) NOT NULL,
+  `fecha_modificacion` datetime DEFAULT NULL,
+  `fkarea` int(11) NOT NULL,
+  `involucrados` text DEFAULT NULL,
+  `en_cartelera` tinyint(1) NULL DEFAULT NULL,
+  `estatus` varchar(10) NOT NULL,
+  `incidencias` ADD `fkequipo` INT NULL;
+)
+
+ALTER TABLE `incidencias` ADD INDEX(`fkequipo`);
+
+ALTER TABLE `tareas` ADD `fkarea` INT NOT NULL AFTER `login_modificacion`;
+ALTER TABLE `tareas` ADD INDEX(`fkarea`);

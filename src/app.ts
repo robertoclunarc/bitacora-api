@@ -18,6 +18,8 @@ import menusUsuariosRoutes from './routes/menus-usuarios.routes';
 import oldBitacorasRoutes from './routes/old-bitacoras.routes';
 import archivosRoutes from './routes/archivosRoutes';
 import tipoBitacorasRoutes from './routes/tipoBitacoras.routes';
+import incidenciasRoutes  from './routes/incidencia.routes';
+import tareasRoutes from './routes/tarea.routes';
 import { testConnection } from './config/database';
 import config from './config/config';
 import morgan from 'morgan';
@@ -54,6 +56,8 @@ app.use('/api-bitacora/senales-force', senalesForceRoutes);
 app.use('/api-bitacora/archivos', archivosRoutes);
 app.use('/api-bitacora/minutas', minutasRoutes);
 app.use('/api-bitacora/tiposbitacoras', tipoBitacorasRoutes);
+app.use('/api-bitacora/incidencias', incidenciasRoutes);
+app.use('/api-bitacora/tareas', tareasRoutes);
 
 // Ruta de verificación básica
 app.get('/', (req, res) => {
