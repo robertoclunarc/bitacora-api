@@ -5,6 +5,7 @@ import path from 'path';
 import multer, { FileFilterCallback } from 'multer';
 import { v4 as uuidv4 } from 'uuid';
 import { Archivo, MulterFile, Bitacora } from '../types/interfaces';
+import * as archivoBitacoraModel from '../models/archivoBitacora.model';
 import { RequestWithUser } from '../middlewares/authMiddleware';
 import { handleDatabaseError } from '../utils/errorHandler';
 
@@ -248,5 +249,34 @@ export const deleteArchivo = async (req: Request, res: Response): Promise<void> 
     res.json({ message: 'Archivo eliminado exitosamente' });
   } catch (error) {
     handleDatabaseError(error, res);
+  }
+};
+
+export const getImagenesPublicas = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+    console.log('Limit:', limit); // Debugging line to check the limit value
+    const imagenes = await archivoBitacoraModel.getImagenesPublicas(limit);
+    
+    // Transformar las rutas de las imágenes a URLs completas si es necesario
+    const imagenesConUrl = imagenes.map(img => {
+      // Asumiendo que la ruta del archivo se almacena como ruta relativa
+      // Ajusta esto según la estructura de tus rutas de archivos
+      const urlBase = process.env.API_URL || req.protocol + '://' + req.get('host');
+      const rutaImagen = img.ruta_archivo.replace(/^public\//, '');
+      
+      return {
+        ...img,
+        url_imagen: `${urlBase}/uploads/${rutaImagen}`
+      };
+    });
+    
+    res.json({ 
+      imagenes: imagenesConUrl,
+      total: imagenesConUrl.length 
+    });
+  } catch (error) {
+    console.error('Error al obtener imágenes públicas:', error);
+    res.status(500).json({ error: 'Error al obtener imágenes públicas' });
   }
 };
