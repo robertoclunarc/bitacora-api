@@ -20,9 +20,12 @@ import archivosRoutes from './routes/archivosRoutes';
 import tipoBitacorasRoutes from './routes/tipoBitacoras.routes';
 import incidenciasRoutes  from './routes/incidencia.routes';
 import tareasRoutes from './routes/tarea.routes';
+import archivosPublicosRoutes from './routes/archivos-publicos.routes';
+import resumenSistemaRoutes from './routes/resumen-sistema.routes';
 import { testConnection } from './config/database';
 import config from './config/config';
 import morgan from 'morgan';
+import path from 'path';
 // Importar las demás rutas aquí
 
 // Cargar variables de entorno
@@ -37,6 +40,7 @@ app.use(morgan('dev'));
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Rutas
 app.use('/api-bitacora/auth', authRoutes);
@@ -58,6 +62,8 @@ app.use('/api-bitacora/minutas', minutasRoutes);
 app.use('/api-bitacora/tiposbitacoras', tipoBitacorasRoutes);
 app.use('/api-bitacora/incidencias', incidenciasRoutes);
 app.use('/api-bitacora/tareas', tareasRoutes);
+app.use('/api-bitacora/archivos-publicos', archivosPublicosRoutes);
+app.use('/api-bitacora/resumen-sistema', resumenSistemaRoutes);
 
 // Ruta de verificación básica
 app.get('/', (req, res) => {

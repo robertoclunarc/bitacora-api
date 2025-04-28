@@ -252,31 +252,34 @@ export const deleteArchivo = async (req: Request, res: Response): Promise<void> 
   }
 };
 
+
 export const getImagenesPublicas = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
-    console.log('Limit:', limit); // Debugging line to check the limit value
-    const imagenes = await archivoBitacoraModel.getImagenesPublicas(limit);
-    
-    // Transformar las rutas de las imágenes a URLs completas si es necesario
-    const imagenesConUrl = imagenes.map(img => {
-      // Asumiendo que la ruta del archivo se almacena como ruta relativa
-      // Ajusta esto según la estructura de tus rutas de archivos
-      const urlBase = process.env.API_URL || req.protocol + '://' + req.get('host');
-      const rutaImagen = img.ruta_archivo.replace(/^public\//, '');
+    try {
+      //console.log('Request:', req);
+      const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+      console.log('Limit:', limit); // Debugging line to check the limit value
+      const imagenes = await archivoBitacoraModel.getImagenesPublicas(limit);
       
-      return {
-        ...img,
-        url_imagen: `${urlBase}/uploads/${rutaImagen}`
-      };
-    });
-    
-    res.json({ 
-      imagenes: imagenesConUrl,
-      total: imagenesConUrl.length 
-    });
-  } catch (error) {
-    console.error('Error al obtener imágenes públicas:', error);
-    res.status(500).json({ error: 'Error al obtener imágenes públicas' });
-  }
-};
+      // Transformar las rutas de las imágenes a URLs completas si es necesario
+      const imagenesConUrl = imagenes.map(img => {
+        // Asumiendo que la ruta del archivo se almacena como ruta relativa
+        // Ajusta esto según la estructura de tus rutas de archivos
+        const urlBase = process.env.API_URL || req.protocol + '://' + req.get('host');
+        const rutaImagen = img.ruta_archivo.replace(/^public\//, '');
+        
+        return {
+          ...img,
+          url_imagen: `${urlBase}/uploads/${rutaImagen}`
+        };
+      });
+      
+      res.json({ 
+        imagenes: imagenesConUrl,
+        total: imagenesConUrl.length 
+      });
+    } catch (error) {
+     
+      handleDatabaseError(error, res, 'Error al obtener imágenes públicas');
+    }
+  };
+  

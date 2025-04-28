@@ -131,3 +131,56 @@ export const verifyPassword = async (login: string, password: string): Promise<b
     throw error;
   }
 };
+
+export const getTotalUsuarios = async (): Promise<number> => {
+  try {
+    const query = `
+      SELECT COUNT(*) AS total
+      FROM usuarios
+      WHERE estatus ='ACTIVO'
+    `;
+
+    const [rows]: any = await pool.query(query);
+    return rows[0].total;
+  } catch (error) {
+    console.error('Error al obtener total de usuarios:', error);
+    throw error;
+  }
+};
+
+export const getActividadUsuarios = async (): Promise<{ total: number, porcentaje: number }> => {
+  try {
+    // Obtener usuarios activos en las últimas 2 semanas (por ejemplo)
+    const query = `
+      SELECT 
+        COUNT(DISTINCT login) AS usuariosActivos,
+        (SELECT COUNT(*) FROM usuarios WHERE estatus='ACTIVO') AS totalUsuarios
+      FROM (
+        SELECT DISTINCT login FROM bitacora 
+        WHERE fecha_hora_registrado >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+        UNION
+        SELECT DISTINCT login_registrado FROM reuniones 
+        WHERE fecha_registrado >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+        UNION
+        SELECT DISTINCT login_registrado FROM carteleras 
+        WHERE fecha_registrado >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+        UNION
+        SELECT DISTINCT login_registrado FROM tareas 
+        WHERE fecha_registrado >= DATE_SUB(NOW(), INTERVAL 14 DAY)
+      ) AS usuarios_activos
+    `;
+
+    const [rows]: any = await pool.query(query);
+    
+    const usuariosActivos = rows[0].usuariosActivos || 0;
+    const totalUsuarios = rows[0].totalUsuarios || 1; // Evitar división por cero
+    
+    return {
+      total: usuariosActivos,
+      porcentaje: Math.round((usuariosActivos / totalUsuarios) * 100)
+    };
+  } catch (error) {
+    console.error('Error al obtener actividad de usuarios:', error);
+    throw error;
+  }
+};

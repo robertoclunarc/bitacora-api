@@ -239,3 +239,29 @@ export const countReuniones = async (criteria: {
     throw error;
   }
 };
+
+export const getReunionesPendientes = async (): Promise<{ total: number, porcentaje: number }> => {
+  try {
+    const query = `
+      SELECT 
+        COUNT(*) AS pendientes,
+        (SELECT COUNT(*) FROM reuniones) AS total
+      FROM reuniones
+      WHERE fecha_inicio >= NOW()
+      AND estatus in ('PENDIENTE', 'PROGRAMADA')
+    `;
+
+    const [rows]: any = await pool.query(query);
+    
+    const pendientes = rows[0].pendientes || 0;
+    const total = rows[0].total || 1; // Evitar división por cero
+    
+    return {
+      total: pendientes,
+      porcentaje: Math.round((pendientes / total) * 100)
+    };
+  } catch (error) {
+    console.error('Error al obtener reuniones pendientes:', error);
+    throw error;
+  }
+};

@@ -6,7 +6,7 @@ import {
   createReunion,
   updateReunion,
   deleteReunion,
-  searchReuniones
+  searchReuniones,
 } from '../controllers/reuniones.controller';
 import { authenticateJWT, checkRole } from '../middlewares/authMiddleware';
 

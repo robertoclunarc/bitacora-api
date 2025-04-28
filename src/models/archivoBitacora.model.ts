@@ -16,7 +16,7 @@ export const getImagenesPublicas = async (limit: number = 10): Promise<Archivo[]
     `;
 
     const [rows] = await pool.query(query, [limit]);
-    console.log('Filas obtenidas:', rows); // Debugging line to check the rows returned
+    //console.log('Filas obtenidas:', rows); // Debugging line to check the rows returned
     return rows as Archivo[];
   } catch (error) {
     console.error('Error al obtener imágenes de bitácoras públicas:', error);
