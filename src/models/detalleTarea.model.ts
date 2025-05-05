@@ -30,13 +30,13 @@ export const findById = async (id: number): Promise<DetalleTareaWithDetails | nu
     const query = `
       SELECT dt.*, 
         u.nombres AS nombre_usuario,
-        e.nombreequipo AS nombre_equipo
+        e.descripcion_equipo AS nombre_equipo
       FROM detallestareas dt
       LEFT JOIN usuarios u ON dt.login_registrado = u.login
       LEFT JOIN equipos e ON dt.fkequipo = e.idequipo
       WHERE dt.iddetalletarea = ?
     `;
-
+    
     const [rows] = await pool.query<RowDataPacket[]>(query, [id]);
     
     if (rows.length === 0) {

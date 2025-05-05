@@ -22,6 +22,7 @@ import incidenciasRoutes  from './routes/incidencia.routes';
 import tareasRoutes from './routes/tarea.routes';
 import archivosPublicosRoutes from './routes/archivos-publicos.routes';
 import resumenSistemaRoutes from './routes/resumen-sistema.routes';
+import notificacionesRoutes from './routes/notificaciones.routes';
 import { testConnection } from './config/database';
 import config from './config/config';
 import morgan from 'morgan';
@@ -64,6 +65,7 @@ app.use('/api-bitacora/incidencias', incidenciasRoutes);
 app.use('/api-bitacora/tareas', tareasRoutes);
 app.use('/api-bitacora/archivos-publicos', archivosPublicosRoutes);
 app.use('/api-bitacora/resumen-sistema', resumenSistemaRoutes);
+app.use('/api-bitacora/notificaciones', notificacionesRoutes);
 
 // Ruta de verificación básica
 app.get('/', (req, res) => {
