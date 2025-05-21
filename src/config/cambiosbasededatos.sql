@@ -26,6 +26,8 @@ INSERT INTO `menus` (`idmenu`, `idpadre`, `name`, `url`, `href`, `icon`, `badge_
 (14, 13, 'Áreas', '/configuracion/areas', 'CNavItem', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 14),
 (15, 13, 'Equipos', '/configuracion/equipos', 'CNavItem', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 15),
 (16, 13, 'Usuarios', '/configuracion/usuarios', 'CNavItem', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 16);
+(17, 3, 'Historicos', NULL, 'CNavTitle', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 17),
+(18, 17, 'Bitacoras', NULL, 'CNavItem', 'cilAvTimer', 'OLD', 'secundary', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 2)
 
 
 INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`, `pselect`, `export`, `estatus`) VALUES
@@ -43,6 +45,8 @@ INSERT INTO `menus_usuarios` (`idmenu`, `login`, `pupdate`, `pinsert`, `pdelete`
 (14, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
 (15, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO'),
 (16, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO');
+(17, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO');
+(18, 'matlux', 1, 1, 1, 1, 1, 'ACTIVO');
 
 ALTER TABLE `carteleras` CHANGE `tipo_info` `tipo_info` ENUM('INFO','WARNING','DANGER') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'INFO';
 ALTER TABLE `carteleras` ADD `publico` BOOLEAN NOT NULL DEFAULT TRUE AFTER `tipo_info`;

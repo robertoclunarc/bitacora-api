@@ -251,8 +251,59 @@ export interface AuthUser {
     folio: number;
     turno?: string;
     tipo: string;
-    // ... otros campos según sea necesario
+    codigoU?: string;
+    codigoET?: string;
+    etidesc?: string;
+    codigoEQ?: string;
+    codigoR?: string;
+    respodesc?: string;
+    descripcion?: string;
+    usuario?: string;
+    ultusuario?: string;
+    fecharev?: string;
+    horarev?: string;
+    critico: boolean;
+    revisado: boolean;
+    tipousuario?: number;
+    descequipo?: string;
+    criticorpt?: string;
+    ejecurpt?: string;
+    codisap?: string;
+    aviso?: boolean;
+    quepaso?: string;
+    porquepaso?: string;
+    quesehizo?: string;
+    fechainicio?: Date;
+    horainicio?: string;
+    fechafin?: Date;
+    horafin?: string;
+    prioridad?: string;
+    parada?: boolean;
+    tema?: string;
+    todomant?: string;
+    duractividad?: string;
+    personalutil?: string;
+    fecha_comp?: Date;
+    usuari_fecha?: string;
+    pendiente?: boolean;
+    observacion?: string;
   }
+
+  export interface OldBitacoraFilters {
+  folio?: number;
+  fecha_inicio?: string;
+  fecha_fin?: string;
+  tipo?: string;
+  tema?: string;
+  descripcion?: string;
+  usuario?: string;
+  codigoEQ?: string;
+  critico?: boolean;
+  revisado?: boolean;
+  turno?: string;
+  orderBy?: string;
+  orderDir?: 'ASC' | 'DESC';
+}
 
   export interface Pagination {
     total: number;
