@@ -15,9 +15,9 @@ export interface RequestWithUser extends Request {
 }
 
 export const authenticateJWT = (req: Request, res: Response, next: NextFunction): void => {
-  const authHeader = req.headers.authorization;
-
+  const authHeader = req.headers.authorization;  
   if (!authHeader) {
+    console.log('Token no proporcionado');
     res.status(401).json({ message: 'Token no proporcionado' });
     return;
   }
@@ -49,8 +49,8 @@ export const authenticateJWT = (req: Request, res: Response, next: NextFunction)
 export const checkRole = (requiredLevel: number) => {
   return (req: Request, res: Response, next: NextFunction): void => {
     const user = (req as RequestWithUser).user;
-    
     if (!user) {
+      console.log('Usuario no autenticado');
       res.status(401).json({ message: 'Usuario no autenticado' });
       return;
     }

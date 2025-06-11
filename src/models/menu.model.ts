@@ -3,7 +3,7 @@ import { Menu } from '../types/interfaces';
 
 export const findAll = async (): Promise<Menu[]> => {
   try {
-    const [rows] = await pool.query('SELECT * FROM menus ORDER BY orden, idpadre NULLS FIRST, idmenu');
+    const [rows] = await pool.query('SELECT * FROM menus ORDER BY orden, idpadre, idmenu');
     return rows as Menu[];
   } catch (error) {
     console.error('Error en findAll menus:', error);

@@ -17,6 +17,7 @@ export const getAllMenusUsuarios = async (_req: Request, res: Response): Promise
 
 export const getMenuUsuarioByIdAndLogin = async (req: Request, res: Response): Promise<void> => {
   try {
+    console.log(`Obteniendo permiso de menú para usuario idmenu=${req.params.idmenu}, login=${req.params.login}`);
     const { idmenu, login } = req.params;
     const menuUsuario = await menuUsuarioModel.findByIdAndLogin(Number(idmenu), login);
     
@@ -257,7 +258,7 @@ export const bulkAssignMenusToUser = async (req: Request, res: Response): Promis
   try {
     const user = (req as unknown as RequestWithUser).user;
     const { login } = req.params;
-    const { menuIds, defaultPermissions } = req.body;
+    const { menuPermissions } = req.body;
     
     if (!user) {
       res.status(401).json({ message: 'Usuario no autenticado' });
@@ -265,13 +266,13 @@ export const bulkAssignMenusToUser = async (req: Request, res: Response): Promis
     }
     
     // Verificar nivel de acceso (solo nivel alto puede asignar permisos de menú en masa)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para asignar permisos de menú en masa' });
       return;
     }
     
-    if (!menuIds || !Array.isArray(menuIds)) {
-      res.status(400).json({ message: 'Se requiere un arreglo de IDs de menú' });
+    if (!menuPermissions || !Array.isArray(menuPermissions)) {
+      res.status(400).json({ message: 'Se requiere un arreglo de permisos de menú' });
       return;
     }
     
@@ -283,26 +284,28 @@ export const bulkAssignMenusToUser = async (req: Request, res: Response): Promis
       return;
     }
     
-    // Valores predeterminados para permisos
-    const permissions = defaultPermissions || {
-      pupdate: false,
-      pinsert: false,
-      pdelete: false,
-      pselect: true,
-      export: false,
-      estatus: 'ACTIVO'
-    };
+    // Validar estructura de cada permiso
+    for (const permission of menuPermissions) {
+      if (!permission.idmenu || typeof permission.idmenu !== 'number') {
+        res.status(400).json({ message: 'Cada permiso debe tener un idmenu válido' });
+        return;
+      }
+      
+      if (permission.login !== login) {
+        res.status(400).json({ message: 'El login en los permisos debe coincidir con el parámetro de la URL' });
+        return;
+      }
+    }
     
-    await menuUsuarioModel.bulkAssign(menuIds, login, permissions);
+    await menuUsuarioModel.bulkAssignWithSpecificPermissions(login, menuPermissions);
     
     res.status(200).json({
-      message: 'Menús asignados exitosamente al usuario',
+      message: 'Permisos de menús asignados exitosamente al usuario',
       login,
-      menuIds,
-      defaultPermissions: permissions
+      totalPermissions: menuPermissions.length
     });
   } catch (error) {
-    console.error(`Error al asignar menús en masa al usuario ${req.params.login}:`, error);
+    console.error(`Error al asignar permisos en masa al usuario ${req.params.login}:`, error);
     res.status(500).json({ message: 'Error interno del servidor' });
   }
 };

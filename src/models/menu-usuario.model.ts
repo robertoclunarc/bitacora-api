@@ -137,7 +137,91 @@ export const remove = async (idmenu: number, login: string): Promise<boolean> =>
     throw error;
   }
 };
+/*
+export const bulkAssign = async (menuIds: number[], login: string, defaultPermissions: {
+  pupdate: boolean,
+  pinsert: boolean,
+  pdelete: boolean,
+  pselect: boolean,
+  export?: boolean,
+  estatus: string
+}): Promise<boolean> => {
+  try {
+    // Eliminar asignaciones existentes para este usuario
+    await pool.query('DELETE FROM menus_usuarios WHERE login = ?', [login]);
+    
+    if (menuIds.length === 0) {
+      return true; // No hay menús para asignar
+    }
+    
+    // Preparar valores para inserción masiva
+    const values = menuIds.map(idmenu => [
+      idmenu,
+      login,
+      defaultPermissions.pupdate,
+      defaultPermissions.pinsert,
+      defaultPermissions.pdelete,
+      defaultPermissions.pselect,
+      defaultPermissions.export || false,
+      defaultPermissions.estatus || 'ACTIVO'
+    ]);
+    
+    const placeholders = values.map(() => '(?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+    const flatValues = values.flat();
+    
+    await pool.query(
+      `INSERT INTO menus_usuarios (
+        idmenu, login, pupdate, pinsert, pdelete, pselect, export, estatus
+      ) VALUES ${placeholders}`,
+      flatValues
+    );
+    
+    return true;
+  } catch (error) {
+    console.error(`Error en bulkAssign para usuario ${login}:`, error);
+    throw error;
+  }
+};
+*/
+export const bulkAssignWithSpecificPermissions = async (login: string, menuPermissions: MenuUsuario[]): Promise<boolean> => {
+  try {
+    // Eliminar asignaciones existentes para este usuario
+    await pool.query('DELETE FROM menus_usuarios WHERE login = ?', [login]);
+    
+    if (menuPermissions.length === 0) {
+      return true; // No hay menús para asignar
+    }
+    
+    // Preparar valores para inserción masiva con permisos específicos
+    const values = menuPermissions.map(permission => [
+      permission.idmenu,
+      permission.login,
+      permission.pupdate || false,
+      permission.pinsert || false,
+      permission.pdelete || false,
+      permission.pselect !== undefined ? permission.pselect : true,
+      permission.export || false,
+      permission.estatus || 'ACTIVO'
+    ]);
+    
+    const placeholders = values.map(() => '(?, ?, ?, ?, ?, ?, ?, ?)').join(', ');
+    const flatValues = values.flat();
+    
+    await pool.query(
+      `INSERT INTO menus_usuarios (
+        idmenu, login, pupdate, pinsert, pdelete, pselect, export, estatus
+      ) VALUES ${placeholders}`,
+      flatValues
+    );
+    
+    return true;
+  } catch (error) {
+    console.error(`Error en bulkAssignWithSpecificPermissions para usuario ${login}:`, error);
+    throw error;
+  }
+};
 
+// Mantener la función original para compatibilidad hacia atrás
 export const bulkAssign = async (menuIds: number[], login: string, defaultPermissions: {
   pupdate: boolean,
   pinsert: boolean,

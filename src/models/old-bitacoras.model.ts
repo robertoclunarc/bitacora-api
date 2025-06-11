@@ -88,7 +88,7 @@ export const findAll = async (
       ${orderClause} 
       LIMIT ? OFFSET ?
     `;
-    console.log('Query:', query);
+    
     // Consulta para contar el total de registros
     const countQuery = `
       SELECT COUNT(*) as total 

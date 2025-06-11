@@ -54,7 +54,7 @@ export const createMenu = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Verificar nivel de acceso (solo nivel alto puede crear menús)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para crear menús' });
       return;
     }
@@ -95,7 +95,7 @@ export const updateMenu = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Verificar nivel de acceso (solo nivel alto puede modificar menús)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para modificar menús' });
       return;
     }
@@ -148,7 +148,7 @@ export const updateMenuStatus = async (req: Request, res: Response): Promise<voi
     }
     
     // Verificar nivel de acceso (solo nivel alto puede modificar estatus de menús)
-    if (user.nivel < 3) {
+    if (user.nivel > 1) {
       res.status(403).json({ message: 'No tienes permiso para modificar el estatus de menús' });
       return;
     }
@@ -194,7 +194,7 @@ export const deleteMenu = async (req: Request, res: Response): Promise<void> => 
     }
     
     // Verificar nivel de acceso (solo nivel alto puede eliminar menús)
-    if (user.nivel < 3) {
+    if (user.nivel >1) {
       res.status(403).json({ message: 'No tienes permiso para eliminar menús' });
       return;
     }
